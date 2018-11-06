@@ -1,0 +1,240 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+///Implementação de fila com lista 
+
+typedef struct estrutura
+{
+    int dado;
+    struct estrutura *prox;
+
+}NO;
+
+typedef struct FILA
+{
+    NO* inicio;
+    NO* fim;
+
+}tfila;
+
+// Inicialização da fila dinamica
+tfila* cria(void)
+{
+    tfila* Fil =(tfila*) malloc(sizeof(tfila));
+    Fil->inicio = NULL;
+    Fil->fim = NULL;
+}
+
+int vazia(tfila* Fil)
+{
+    return (Fil->inicio==NULL);
+}
+
+//função auxiliar: insere no fim
+NO* ins_fim(NO* fim, int valor)
+{
+    NO* p = (NO*) malloc(sizeof(NO));
+    p->dado = valor;
+    p->prox = NULL;
+
+    if(fim !=NULL)  /* verifica se lista não estava vazia */
+        fim->prox = p;
+
+    return p;
+}
+
+//função inserir
+void inserir(tfila *Fil, int valor)
+{
+    Fil->fim = ins_fim(Fil->fim, valor);
+
+    if(Fil->inicio == NULL) // Fila antes vazia?
+        Fil->inicio = Fil->fim;
+}
+
+//função auxiliar: retira do início
+NO* ret_ini(NO* ini)
+{
+    NO* p = ini->prox;
+    free(ini);
+    return p;
+}
+
+//função remover
+int remover(tfila* Fil)
+{
+    int v;
+
+    if(vazia(Fil))
+    {
+        printf("\n\nFila vazia:");
+        exit(1);
+    }
+
+    v = Fil->inicio->dado;
+    Fil->inicio = ret_ini(Fil->inicio);
+
+    if(Fil->inicio == NULL) //fila ficou vazia?
+    {
+        Fil->fim = NULL;
+    }
+    return v;
+}
+void libera(tfila* Fil)
+{
+    NO* q = Fil->fim;
+
+    while(q!=NULL)
+    {
+        NO* t = q->prox;
+        free(q);
+        q = t;
+    }
+    free(Fil);
+}
+
+// imprime: versão com lista
+void imprime (tfila* Fil)
+{
+    NO* q;
+
+    printf("\n\nFILA: ");
+    for(q = Fil->inicio; q!=NULL; q=q->prox)
+    {
+        printf("%d, ", q->dado);
+    }
+}
+// quantos elementos existem
+int tamanhoFdinam(tfila*Fil)
+{
+   NO* p;
+   int tam = 0;
+
+   p = Fil->inicio;
+
+   while(p)
+   {
+       tam++;
+       p = p->prox;
+   }
+   return tam;
+}
+
+int main()
+{
+    tfila* fil = cria();
+
+    int parada = 0, op, num, lb =0, cont=0;
+    // lb e cont é para validar quando a lista é liberada, assim nao ocorre erro
+
+    while(parada == 0)
+    {
+        printf("\nESCOLHA UMA OPÇAO:\n");
+        printf("\n1- Insere itens na Fila");
+        printf("\n2- Retira itens na Fila");
+        printf("\n3- Tamanho da Fila");
+        printf("\n4- Liberar  ha Fila");
+        printf("\n5- Imprime  ha Fila");
+        printf("\n6- Sair");
+
+        printf("\n\nOpcao: ");
+        scanf("%d", &op);
+
+        switch(op)
+        {
+            case 1:
+                printf("\nOpcao: 1- Insere itens na Fila ");
+
+                num = rand()%100;
+                printf("\nDigete o elemento: %d", num);
+
+                if (lb != 0 && cont == 0)
+                {
+                    fil = cria();
+                }
+
+                inserir(fil, num);
+                cont++;
+
+                printf("\n\n");
+                system("pause");
+                system("cls");
+            break;
+
+            case 2:
+                printf("\nOpcao: 2- Retira itens na Fila");
+
+                if(cont != 0)
+                {
+                    printf("\nTirando da Fila %d", remover(fil));
+                }
+                else
+                {
+                    printf("\nINSERE PRIMEIRO OS ELEMENTO NA FILA\n");
+                }
+
+                printf("\n\n");
+                system("pause");
+                system("cls");
+            break;
+
+            case 3:
+                printf("\nOpcao: 3- Tamanho da Fila");
+
+                if(cont != 0)
+                {
+                    printf("\n Tamanho da Fila %d",tamanhoFdinam(fil));
+                }
+                else
+                {
+                    printf("\nINSERE PRIMEIRO OS ELEMENTO NA FILA\n");
+                }
+
+                printf("\n\n");
+                system("pause");
+                system("cls");
+            break;
+
+            case 4:
+                printf("\nOpcao: 4- Liberar  ha Fila");
+
+                libera(fil);
+                lb++;
+                cont = 0;
+
+                printf("\n\n");
+                system("pause");
+                system("cls");
+            break;
+
+            case 5:
+                printf("\nOpcao: 5- Imprime  ha Fila");
+
+                if(cont != 0)
+                {
+                    imprime(fil);
+                }
+                else
+                {
+                    printf("\nINSERE PRIMEIRO OS ELEMENTO NA FILA\n");
+                }
+
+                printf("\n\n");
+                system("pause");
+                system("cls");
+            break;
+
+            case 6:
+                printf("\nOpcao: 5- Sair");
+
+                parada = 1;
+
+                printf("\n\n");
+                system("pause");
+                system("cls");
+            break;
+        }
+    }
+
+    return 0;
+}
