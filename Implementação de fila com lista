@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-///Implementação de fila com lista 
-
 typedef struct estrutura
 {
     int dado;
